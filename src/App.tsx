@@ -1,7 +1,13 @@
-import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
-import { Download, Languages } from 'lucide-react'
-import { CornerPanel } from './components/CornerPanel'
-import { Modal } from './components/Modal'
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
+import { Download, Languages, RefreshCcw, Save } from "lucide-react";
+import { CornerPanel } from "./components/CornerPanel";
+import { Modal } from "./components/Modal";
 import {
   buildMarkdown,
   defaultState,
@@ -10,78 +16,81 @@ import {
   STORAGE_KEY,
   type QuadrantKey,
   type SheetState,
-} from './lib/sheet'
+} from "./lib/sheet";
 
 const quadrantMeta: Array<{
-  key: QuadrantKey
-  panelClassName: string
+  key: QuadrantKey;
+  panelClassName: string;
 }> = [
   {
-    key: 'doingPros',
-    panelClassName: 'bg-[#fbfdf8]',
+    key: "doingPros",
+    panelClassName: "bg-[#fbfdf8]",
   },
   {
-    key: 'doingCons',
-    panelClassName: 'bg-[#fefaf8]',
+    key: "doingCons",
+    panelClassName: "bg-[#fefaf8]",
   },
   {
-    key: 'notDoingPros',
-    panelClassName: 'bg-[#f8fcfd]',
+    key: "notDoingPros",
+    panelClassName: "bg-[#f8fcfd]",
   },
   {
-    key: 'notDoingCons',
-    panelClassName: 'bg-[#fbf9fd]',
+    key: "notDoingCons",
+    panelClassName: "bg-[#fbf9fd]",
   },
-]
+];
 
 function App() {
-  const [sheet, setSheet] = useState<SheetState>(readInitialState)
-  const [resetMode, setResetMode] = useState(false)
-  const [saveOpen, setSaveOpen] = useState(false)
-  const [infoOpen, setInfoOpen] = useState(false)
-  const [copied, setCopied] = useState(false)
-  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({})
-  const pendingFocusRef = useRef<{ key: QuadrantKey; index: number } | null>(null)
-  const copy = messages[sheet.locale]
-  const markdown = useMemo(() => buildMarkdown(sheet, copy), [sheet, copy])
-  const canExport = sheet.subject.trim().length > 0
+  const [sheet, setSheet] = useState<SheetState>(readInitialState);
+  const [resetMode, setResetMode] = useState(false);
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const pendingFocusRef = useRef<{ key: QuadrantKey; index: number } | null>(
+    null,
+  );
+  const copy = messages[sheet.locale];
+  const markdown = useMemo(() => buildMarkdown(sheet, copy), [sheet, copy]);
+  const canExport = sheet.subject.trim().length > 0;
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sheet))
-  }, [sheet])
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sheet));
+  }, [sheet]);
 
   useEffect(() => {
-    const pendingFocus = pendingFocusRef.current
+    const pendingFocus = pendingFocusRef.current;
 
     if (!pendingFocus) {
-      return
+      return;
     }
 
-    const target = inputRefs.current[`${pendingFocus.key}-${pendingFocus.index}`]
+    const target =
+      inputRefs.current[`${pendingFocus.key}-${pendingFocus.index}`];
 
     if (target) {
-      target.focus()
-      target.setSelectionRange(target.value.length, target.value.length)
+      target.focus();
+      target.setSelectionRange(target.value.length, target.value.length);
     }
 
-    pendingFocusRef.current = null
-  }, [sheet])
+    pendingFocusRef.current = null;
+  }, [sheet]);
 
   useEffect(() => {
     if (!copied) {
-      return
+      return;
     }
 
-    const timeout = window.setTimeout(() => setCopied(false), 1500)
-    return () => window.clearTimeout(timeout)
-  }, [copied])
+    const timeout = window.setTimeout(() => setCopied(false), 1500);
+    return () => window.clearTimeout(timeout);
+  }, [copied]);
 
   const updateSubject = (value: string) => {
     setSheet((current) => ({
       ...current,
       subject: value,
-    }))
-  }
+    }));
+  };
 
   const updateItem = (key: QuadrantKey, index: number, value: string) => {
     setSheet((current) => ({
@@ -92,8 +101,8 @@ function App() {
           itemIndex === index ? { ...item, text: value } : item,
         ),
       },
-    }))
-  }
+    }));
+  };
 
   const toggleItemBold = (key: QuadrantKey, index: number) => {
     setSheet((current) => ({
@@ -104,15 +113,15 @@ function App() {
           itemIndex === index ? { ...item, bold: !item.bold } : item,
         ),
       },
-    }))
-  }
+    }));
+  };
 
   const insertItemAfter = (key: QuadrantKey, index: number) => {
-    pendingFocusRef.current = { key, index: index + 1 }
+    pendingFocusRef.current = { key, index: index + 1 };
 
     setSheet((current) => {
-      const nextItems = [...current.quadrants[key]]
-      nextItems.splice(index + 1, 0, { text: '', bold: false })
+      const nextItems = [...current.quadrants[key]];
+      nextItems.splice(index + 1, 0, { text: "", bold: false });
 
       return {
         ...current,
@@ -120,27 +129,27 @@ function App() {
           ...current.quadrants,
           [key]: nextItems,
         },
-      }
-    })
-  }
+      };
+    });
+  };
 
   const removeItemAt = (key: QuadrantKey, index: number) => {
     setSheet((current) => {
-      const items = current.quadrants[key]
+      const items = current.quadrants[key];
 
       if (items.length === 1) {
-        pendingFocusRef.current = { key, index: 0 }
+        pendingFocusRef.current = { key, index: 0 };
 
         return {
           ...current,
           quadrants: {
             ...current.quadrants,
-            [key]: [{ text: '', bold: false }],
+            [key]: [{ text: "", bold: false }],
           },
-        }
+        };
       }
 
-      pendingFocusRef.current = { key, index: Math.max(0, index - 1) }
+      pendingFocusRef.current = { key, index: Math.max(0, index - 1) };
 
       return {
         ...current,
@@ -148,69 +157,69 @@ function App() {
           ...current.quadrants,
           [key]: items.filter((_, itemIndex) => itemIndex !== index),
         },
-      }
-    })
-  }
+      };
+    });
+  };
 
   const handleItemKeyDown = (
     event: KeyboardEvent<HTMLInputElement>,
     key: QuadrantKey,
     index: number,
   ) => {
-    if (event.key === 'Enter') {
-      event.preventDefault()
-      insertItemAfter(key, index)
-      return
+    if (event.key === "Enter") {
+      event.preventDefault();
+      insertItemAfter(key, index);
+      return;
     }
 
-    if (event.key === 'Backspace' && event.currentTarget.value === '') {
-      event.preventDefault()
-      removeItemAt(key, index)
+    if (event.key === "Backspace" && event.currentTarget.value === "") {
+      event.preventDefault();
+      removeItemAt(key, index);
     }
-  }
+  };
 
   const toggleLocale = () => {
     setSheet((current) => ({
       ...current,
-      locale: current.locale === 'zh' ? 'en' : 'zh',
-    }))
-  }
+      locale: current.locale === "zh" ? "en" : "zh",
+    }));
+  };
 
   const handleResetConfirm = () => {
     setSheet((current) => ({
       ...defaultState,
       locale: current.locale,
-    }))
-    setResetMode(false)
-    setSaveOpen(false)
-    setInfoOpen(false)
-    localStorage.removeItem(STORAGE_KEY)
-  }
+    }));
+    setResetMode(false);
+    setSaveOpen(false);
+    setInfoOpen(false);
+    localStorage.removeItem(STORAGE_KEY);
+  };
 
   const handleCopyMarkdown = async () => {
     if (!canExport) {
-      return
+      return;
     }
 
-    await navigator.clipboard.writeText(markdown)
-    setCopied(true)
-  }
+    await navigator.clipboard.writeText(markdown);
+    setCopied(true);
+  };
 
   const handleDownloadMarkdown = () => {
     if (!canExport) {
-      return
+      return;
     }
 
-    const blob = new Blob([markdown], { type: 'text/markdown;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    const subject = sheet.subject.trim() || 'proconsheet'
+    const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    const subject = sheet.subject.trim() || "proconsheet";
 
-    link.href = url
-    link.download = `${subject.replace(/[\\/:*?"<>|]/g, '-').slice(0, 60)}.md`
-    link.click()
-    URL.revokeObjectURL(url)
-  }
+    link.href = url;
+    link.download = `${subject.replace(/[\\/:*?"<>|]/g, "-").slice(0, 60)}.md`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <>
@@ -247,9 +256,9 @@ function App() {
                 <li key={`${quadrant.key}-${index}`} className="list-item pb-3">
                   <input
                     ref={(element) => {
-                      inputRefs.current[`${quadrant.key}-${index}`] = element
+                      inputRefs.current[`${quadrant.key}-${index}`] = element;
                     }}
-                    className={`w-full border-0 border-b border-transparent bg-transparent py-0.5 text-sm leading-7 text-stone-700 outline-none placeholder:text-stone-500/70 focus:border-stone-700/25 focus:text-stone-900 md:text-base ${item.bold ? 'font-bold' : 'font-normal'}`}
+                    className={`w-full border-0 border-b border-transparent bg-transparent py-0.5 text-sm leading-7 text-stone-700 outline-none placeholder:text-stone-500/70 focus:border-stone-700/25 focus:text-stone-900 md:text-base ${item.bold ? "font-bold" : "font-normal"}`}
                     type="text"
                     value={item.text}
                     onChange={(event) =>
@@ -259,8 +268,8 @@ function App() {
                       handleItemKeyDown(event, quadrant.key, index)
                     }
                     onContextMenu={(event) => {
-                      event.preventDefault()
-                      toggleItemBold(quadrant.key, index)
+                      event.preventDefault();
+                      toggleItemBold(quadrant.key, index);
                     }}
                     placeholder={copy.placeholders[quadrant.key]}
                   />
@@ -284,9 +293,9 @@ function App() {
                 <li key={`${quadrant.key}-${index}`} className="list-item pb-3">
                   <input
                     ref={(element) => {
-                      inputRefs.current[`${quadrant.key}-${index}`] = element
+                      inputRefs.current[`${quadrant.key}-${index}`] = element;
                     }}
-                    className={`w-full border-0 border-b border-transparent bg-transparent py-0.5 text-sm leading-7 text-stone-700 outline-none placeholder:text-stone-500/70 focus:border-stone-700/25 focus:text-stone-900 md:text-base ${item.bold ? 'font-bold' : 'font-normal'}`}
+                    className={`w-full border-0 border-b border-transparent bg-transparent py-0.5 text-sm leading-7 text-stone-700 outline-none placeholder:text-stone-500/70 focus:border-stone-700/25 focus:text-stone-900 md:text-base ${item.bold ? "font-bold" : "font-normal"}`}
                     type="text"
                     value={item.text}
                     onChange={(event) =>
@@ -296,8 +305,8 @@ function App() {
                       handleItemKeyDown(event, quadrant.key, index)
                     }
                     onContextMenu={(event) => {
-                      event.preventDefault()
-                      toggleItemBold(quadrant.key, index)
+                      event.preventDefault();
+                      toggleItemBold(quadrant.key, index);
                     }}
                     placeholder={copy.placeholders[quadrant.key]}
                   />
@@ -332,7 +341,9 @@ function App() {
                 className="w-full rounded-2xl border border-stone-300 bg-white px-4 py-3 text-sm text-stone-800 outline-none transition focus:border-stone-500"
               />
               {!canExport ? (
-                <p className="text-sm text-rose-600">{copy.exportNameRequired}</p>
+                <p className="text-sm text-rose-600">
+                  {copy.exportNameRequired}
+                </p>
               ) : null}
             </div>
             <textarea
@@ -377,14 +388,22 @@ function App() {
           onClose={() => setInfoOpen(false)}
         >
           <div className="space-y-4 text-sm leading-7 text-stone-700">
-            <div className="space-y-3 rounded-2xl bg-stone-50 p-4">
+            <div className="space-y-3 rounded-2xl bg-stone-50 p-4 -translate-x-2">
               {copy.infoDetails.map((detail) => (
                 <p key={detail}>{detail}</p>
               ))}
             </div>
-            <div className="flex items-center gap-2 text-stone-600">
+            <div className="flex items-center gap-2 text-stone-600 translate-x-2">
               <Languages className="size-4" />
               <span>{copy.languageLabel}</span>
+            </div>
+            <div className="flex items-center gap-2 text-stone-600 translate-x-2">
+              <RefreshCcw className="size-4" />
+              <span>{copy.resetLabel}</span>
+            </div>
+            <div className="flex items-center gap-2 text-stone-600 translate-x-2">
+              <Save className="size-4" />
+              <span>{copy.saveLabel}</span>
             </div>
             <a
               href="https://github.com/Minsecrus/ProConSheet"
@@ -397,7 +416,7 @@ function App() {
             <button
               type="button"
               onClick={() => setInfoOpen(false)}
-              className="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
+              className="rounded-full border border-stone-300 px-4 ml-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
             >
               {copy.close}
             </button>
@@ -405,7 +424,7 @@ function App() {
         </Modal>
       ) : null}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
