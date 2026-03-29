@@ -393,23 +393,15 @@ function App() {
                 <p key={detail}>{detail}</p>
               ))}
             </div>
-            <div className="flex items-center gap-2 text-stone-600 translate-x-2">
-              <Languages className="size-4" />
-              <span>{copy.languageLabel}</span>
-            </div>
-            <div className="flex items-center gap-2 text-stone-600 translate-x-2">
-              <RefreshCcw className="size-4" />
-              <span>{copy.resetLabel}</span>
-            </div>
-            <div className="flex items-center gap-2 text-stone-600 translate-x-2">
-              <Save className="size-4" />
-              <span>{copy.saveLabel}</span>
-            </div>
+            <p>如果你觉得某个理由重要，可以右键将其加粗。再次右键取消加粗。</p>
+            <p>
+              <strong>忍受你必须忍受的，歌唱你必须歌唱的。</strong>
+            </p>
             <a
               href="https://github.com/Minsecrus/ProConSheet"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center rounded-full border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
+              className="inline-flex items-center rounded-full border border-stone-300 mt-2 px-4 py-2 text-sm font-medium text-stone-700 transition hover:bg-stone-100"
             >
               {copy.githubLabel}
             </a>

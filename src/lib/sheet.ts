@@ -71,7 +71,7 @@ export const messages = {
     saveDescription: "Markdown generated from the current sheet.",
     infoTitle: "About ProConSheet",
     infoDescription:
-      "A pro-con sheet helps you break a difficult choice into the benefits and costs of doing something versus not doing it.",
+      "This project is a cost-benefit analysis tool designed to help analyze and weigh various aspects of decision-making events, thereby making more informed choices.",
     infoDetails: [
       "This grid separates a decision into four quadrants: pros of doing it, cons of doing it, pros of not doing it, and cons of not doing it.",
       "It works well for career choices, product decisions, project tradeoffs, partnership evaluation, and any situation where short-term cost and long-term value need to be weighed together.",
