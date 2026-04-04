@@ -4,11 +4,18 @@ import { X } from "lucide-react";
 type ModalProps = {
   title: string;
   description?: string;
+  closeLabel: string;
   onClose: () => void;
   children: ReactNode;
 };
 
-export function Modal({ title, description, onClose, children }: ModalProps) {
+export function Modal({
+  title,
+  description,
+  closeLabel,
+  onClose,
+  children,
+}: ModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-950/35 p-8">
       <div className="w-full max-w-2xl rounded-3xl border border-stone-800/10 bg-white p-6 shadow-2xl shadow-stone-950/10">
@@ -27,7 +34,7 @@ export function Modal({ title, description, onClose, children }: ModalProps) {
             type="button"
             onClick={onClose}
             className="rounded-full p-2 text-stone-500 transition hover:bg-stone-100 hover:text-stone-900"
-            aria-label="Close modal"
+            aria-label={closeLabel}
           >
             <X className="size-5" />
           </button>

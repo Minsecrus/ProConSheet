@@ -5,7 +5,7 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { Download, Languages, RefreshCcw, Save } from "lucide-react";
+import { Download } from "lucide-react";
 import { CornerPanel } from "./components/CornerPanel";
 import { Modal } from "./components/Modal";
 import {
@@ -321,6 +321,7 @@ function App() {
         <Modal
           title={copy.saveTitle}
           description={copy.saveDescription}
+          closeLabel={copy.close}
           onClose={() => setSaveOpen(false)}
         >
           <div className="space-y-4">
@@ -385,6 +386,7 @@ function App() {
         <Modal
           title={copy.infoTitle}
           description={copy.infoDescription}
+          closeLabel={copy.close}
           onClose={() => setInfoOpen(false)}
         >
           <div className="space-y-4 text-sm leading-7 text-stone-700">
@@ -393,9 +395,9 @@ function App() {
                 <p key={detail}>{detail}</p>
               ))}
             </div>
-            <p>如果你觉得某个理由重要，可以右键将其加粗。再次右键取消加粗。</p>
+            <p>{copy.infoBoldTip}</p>
             <p>
-              <strong>忍受你必须忍受的，歌唱你必须歌唱的。</strong>
+              <strong>{copy.infoQuote}</strong>
             </p>
             <a
               href="https://github.com/Minsecrus/ProConSheet"

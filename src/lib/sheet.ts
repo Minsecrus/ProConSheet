@@ -38,6 +38,9 @@ export const messages = {
       "这种方式适合用于职业选择、产品决策、项目取舍、合作判断，以及任何需要平衡短期成本与长期价值的场景。",
       "当四个象限被写满后，你通常能更快发现真正影响决定的关键因素，而不是被单一情绪带着走。",
     ],
+    infoBoldTip:
+      "如果你觉得某个理由重要，可以右键将其加粗。再次右键取消加粗。",
+    infoQuote: "忍受你必须忍受的，歌唱你必须歌唱的。",
     githubLabel: "GitHub 仓库",
     close: "关闭",
     copy: "复制",
@@ -68,7 +71,8 @@ export const messages = {
     notDoing: "Not Doing",
     resetConfirm: "Reset everything?",
     saveTitle: "Save Markdown",
-    saveDescription: "Markdown generated from the current sheet.",
+    saveDescription:
+      "Enter a decision name before copying or downloading the Markdown.",
     infoTitle: "About ProConSheet",
     infoDescription:
       "This project is a cost-benefit analysis tool designed to help analyze and weigh various aspects of decision-making events, thereby making more informed choices.",
@@ -77,6 +81,9 @@ export const messages = {
       "It works well for career choices, product decisions, project tradeoffs, partnership evaluation, and any situation where short-term cost and long-term value need to be weighed together.",
       "Once the four quadrants are filled, it becomes easier to spot which factors actually drive the decision instead of reacting to a single emotion or bias.",
     ],
+    infoBoldTip:
+      "If a reason matters more, right-click it to make it bold. Right-click again to remove the emphasis.",
+    infoQuote: "Endure what must be endured, sing what must be sung.",
     githubLabel: "GitHub repository",
     close: "Close",
     copy: "Copy",
